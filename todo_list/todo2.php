@@ -2,7 +2,7 @@
 
 // 12/2/14 Add a (S)ort option to your menu. 
 // When it is chosen, it should call a function 
-// called sort_menu().
+// called sortMenu().
 
 
 // Create array to hold list of todo items
@@ -11,8 +11,8 @@ $items = array();
 // List array items formatted for CLI
 // This function accepts an array of items.
 
- function listItems($var)
- {
+function listItems($var)
+{
 
     $string = '';
 
@@ -22,42 +22,54 @@ $items = array();
     }
 
     return $string; 
- }
+}
 // When a sort type is selected, order the TODO list accordingly and display 
 // the results.
 
 // 12/2/14 Add sort function.  When sort menu is opened, show the
 // following options "(A)-Z, (Z)-A, (O)rder entered, (R)everse order entered".
 // This function will return a string of those items.
-function sort_menu ($items, $userInput) 
+
+function sortMenu ($items, $userInput) 
 {
-    if ($userInput == 'a') 
-    {
+    if ($userInput == 'a') {
         sort($items);
-    }
-    elseif ($userInput == 'z') 
-    {
+    } elseif ($userInput == 'z') {
         rsort($items);
+    } elseif ($userInput == 'o') {
+        sort ($items);
+    } elseif ($userInput == 'r') {
+        rsort ($items);
     }
-    elseif ($userInput == 'o')    
-    {
-        ksort ($items);
-    }  
-    elseif ($userInput == 'r') 
-    {
-        krsort ($items);
-    }
+
     return $items;
 }
-// sort_menu($string);
+// Add new item to start or end
+function startEndArray ($items, $newItem)
+{
+    echo 'Add new item to (S)tart or (E)nd of list? ' . PHP_EOL;
+    $option = getInput(true);
 
+    if ($option == 's') {
+        array_unshift($items, $newItem);
+    } else {
+        array_push($items, $newItem);
+    }
+
+    return $items;   
+}
 
  // Get STDIN, strip whitespace and newlines,
  // and convert to uppercase if $upper is true
  function getInput ($lower = false)
  {
 
-    $input = strtolower(trim(fgets(STDIN)));
+    if ($lower == true) {
+        $input = strtolower(trim(fgets(STDIN)));
+    }
+    else{
+        $input = trim(fgets(STDIN));
+    }
 
     // if ($lower == true) {
     //     $input = strtolower($input);
@@ -89,14 +101,18 @@ do {
     // Check for actionable input
     if ($input == 'n') 
     {
+        // Ask user if add to start or end of list
         // Ask for entry
-        echo 'Enter item: ';
+        echo 'Enter item: ' . PHP_EOL;
+        $newItem = getInput();
             // Add entry to list array
             // $items[] = trim(fgets(STDIN));
         // Add function to list array
-        $items[] = getInput();
 
-    } elseif ($input == 'r') 
+        $items = startEndArray($items, $newItem);
+
+    } 
+    elseif ($input == 'r') 
     {
         // Remove which item?
         echo 'Enter item number to remove: ';
@@ -108,11 +124,12 @@ do {
         $key--; // changes display for key
         unset($items[$key]);
         $items = array_values($items);// Reindex numerical array
-    } else if ($input == 's')
+    } 
+    else if ($input == 's')
     {
         echo '(A)-Z, (Z)-A, (O)rder entered, (R)everse order entered: ' . PHP_EOL;
-        $sortOption = getInput ();
-        $items = sort_menu ($items, $sortOption);
+        $sortOption = getInput();
+        $items = sortMenu($items, $sortOption);
     }
 // Exit when input is (Q)uit
 } while ($input != 'q');
