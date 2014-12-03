@@ -8,9 +8,19 @@
 // Create array to hold list of todo items
 $items = array();
 
+// This function reads the file from the user input and adds 
+// each line from the file to the current TODO list. 
+function openFile($filename) 
+{
+    $handle = fopen($filename, 'r');
+    $contents = fread($handle, filesize($filename));
+    $contentsArray = explode("\n", $contents);
+    fclose($handle);
+    return $contentsArray;
+}
+
 // List array items formatted for CLI
 // This function accepts an array of items.
-
 function listItems($var)
 {
 
@@ -92,7 +102,7 @@ do {
     // }
 
     // Show the menu options
-    echo '(N)ew item, (R)emove item, (Q)uit, (S)ort : ';
+    echo '(N)ew item, (R)emove item, (Q)uit, (S)ort, (O)pen file : ';
 
         // Get the input from user
         // Use trim() to remove whitespace and newlines
@@ -125,12 +135,20 @@ do {
         unset($items[$key]);
         $items = array_values($items);// Reindex numerical array
     } 
-    else if ($input == 's')
+    elseif ($input == 's')
     {
         echo '(A)-Z, (Z)-A, (O)rder entered, (R)everse order entered: ' . PHP_EOL;
         $sortOption = getInput();
         $items = sortMenu($items, $sortOption);
     }
+    // *Create an (O)pen file option. The user should be able to enter 
+    // the path to a file to have it loaded.
+    elseif ($input =='o') {
+        $filename = 'data/list.txt';
+        $newItems = openFile($filename);
+        $items = array_merge($items, $newItems);
+    }
+
 // Exit when input is (Q)uit
 } while ($input != 'q');
 
