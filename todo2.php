@@ -14,7 +14,7 @@ function openFile($filename)
 {
     $handle = fopen($filename, 'r');
     $contents = fread($handle, filesize($filename));
-    $contentsArray = explode("\n", $contents);
+    $contentsArray = explode("\n", trim($contents));
     fclose($handle);
     return $contentsArray;
 }
@@ -144,7 +144,9 @@ do {
     // *Create an (O)pen file option. The user should be able to enter 
     // the path to a file to have it loaded.
     elseif ($input =='o') {
-        $filename = 'data/list.txt';
+        // $filename = 'data/list.txt';
+        echo 'Enter the file name: ';
+        $filename = getInput();
         $newItems = openFile($filename);
         $items = array_merge($items, $newItems);
     }
