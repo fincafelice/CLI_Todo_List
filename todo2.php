@@ -8,6 +8,17 @@
 // Create array to hold list of todo items
 $items = array();
 
+// This function will allow user to continue or cancel saving to an existing file.
+function cancelSave ($items, $userInput, $filename) 
+{
+    if ($userInput == 'n') {
+        return;
+    } else {
+        saveFile($filename, $items);
+        echo "Your save was successful!\n";        
+    }  
+}  
+
 // This function saves the list to a file.
 function saveFile($filename, $items)
 {
@@ -162,8 +173,18 @@ do {
     elseif ($input == 'a') {
         echo 'Enter the file name: ';
         $filename = getInput();
-        saveFile($filename, $items);
-        echo "Your save was successful!\n";
+        // Warn user if file already exists.
+        if (file_exists($filename)) {
+            echo 'Your file already exists, do you want to overwrite it?' . PHP_EOL;
+            // Allow for user to choose to continue or cancel.
+            echo '(Y)es or (N)o?' . PHP_EOL;
+            // Call function to continue or cancel.
+            $userInput = getInput(true);
+            cancelSave ($items, $userInput, $filename);
+        } else {
+            saveFile($filename, $items);
+            // echo "Your save was successful!\n";
+        }
     }
 
 // Exit when input is (Q)uit
