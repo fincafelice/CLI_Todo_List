@@ -8,6 +8,14 @@
 // Create array to hold list of todo items
 $items = array();
 
+// This function saves the list to a file.
+function saveFile($filename, $items)
+{
+    $handle = fopen($filename, 'w');
+    fwrite($handle, implode("\n", $items));
+    fclose($handle);
+}
+
 // This function reads the file from the user input and adds 
 // each line from the file to the current TODO list. 
 function openFile($filename) 
@@ -102,7 +110,7 @@ do {
     // }
 
     // Show the menu options
-    echo '(N)ew item, (R)emove item, (Q)uit, (S)ort, (O)pen file : ';
+    echo '(N)ew item, (R)emove item, (Q)uit, (S)ort, (O)pen file, s(A)ve file : ';
 
         // Get the input from user
         // Use trim() to remove whitespace and newlines
@@ -149,6 +157,13 @@ do {
         $filename = getInput();
         $newItems = openFile($filename);
         $items = array_merge($items, $newItems);
+    }
+    // The user should be able to enter the path to a file to have it saved.
+    elseif ($input == 'a') {
+        echo 'Enter the file name: ';
+        $filename = getInput();
+        saveFile($filename, $items);
+        echo "Your save was successful!\n";
     }
 
 // Exit when input is (Q)uit
